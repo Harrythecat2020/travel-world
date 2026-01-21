@@ -986,97 +986,43 @@
       };
     }
 
-    async function loadPlacesProgressive({ countryQid, iso3 }, signal, token) {
-      // We tonen al direct een seed (centroid) bij klik.
-      // Hier vullen we progressief aan met Wikidata-resultaten.
+ async function loadPlacesProgressive({ iso3 }, signal, token) {
+  // Toon direct een seed (centroid) bij klik
+  const seed = instantSeedsByIso.get(iso3);
+  if (seed) {
+    renderPlaces([seed]);
+    plotPins([seed]);
+    hideLoading("Startpunt getoond… plekken worden geladen via API.");
+  }
 
-      let firstShown = false;
+  try {
+    showLoading("Plekken laden via API…");
 
-      // Snel 1 plek proberen (maar UI is al instant door seed)
-      try {
-        const fast = await queryPlaces(countryQid, {
-          types: PRIMARY_PLACE_TYPES,
-          limit: 1,
-          minSitelinks: 1,
-          includeP131: false
-        }, signal, 3000);
+    // Hier gebruik je jouw Railway API
+    const res = await fetch(`https://wikidata-server.onrender.com/places/${iso3}`, { signal });
+    if (!res.ok) throw new Error(`API fout: ${res.status}`);
 
-        if (token !== activeLoadToken) return;
+    const places = await res.json();
 
-        if (fast && fast.length) {
-          firstShown = true;
-          hideLoading("1 plek geladen… ik laad de rest door.");
-          panelSubtitle.textContent = "1 plek staat al klaar. Meer plekken worden toegevoegd…";
-          renderPlaces(fast);
-          plotPins(fast);
-        }
-      } catch (e) {
-        if (e && (e.name === "AbortError" || String(e).includes("aborted"))) return;
-      }
+    if (token !== activeLoadToken) return; // check of er ondertussen een andere load is gestart
 
-      const runFull = async () => {
-        try {
-          const min = 5;
+    renderPlaces(places);
+    plotPins(places);
 
-          let places = await queryPlaces(countryQid, {
-            types: PRIMARY_PLACE_TYPES,
-            limit: 60,
-            minSitelinks: 2,
-            includeP131: false
-          }, signal, 12000);
+    // Sla de API-data op in de cache
+    const existing = cache.byIso.get(iso3) || {};
+    cache.byIso.set(iso3, { ...existing, places, ts: Date.now() });
+    saveLocalCache();
 
-          if (token !== activeLoadToken) return;
+    hideLoading(`${places.length} plekken geladen via API.`);
+    panelSubtitle.textContent = "Kies een plek of zoom rond op de pins.";
+  } catch (e) {
+    if (e.name === "AbortError" || String(e).includes("aborted")) return;
+    console.error(e);
+    setStatus("warn", "Kon geen plekken laden via API.");
+  }
+}
 
-          if (places.length < min) {
-            const more = await queryPlaces(countryQid, {
-              types: [],
-              limit: 80,
-              minSitelinks: 12,
-              includeP131: false
-            }, signal, 12000);
-
-            const seen = new Set(places.map(p => p.qid));
-            for (const m of more) if (!seen.has(m.qid)) places.push(m), seen.add(m.qid);
-          }
-
-          if (token !== activeLoadToken) return;
-
-          if (places.length < min) {
-            const heavy = await queryPlaces(countryQid, {
-              types: PRIMARY_PLACE_TYPES,
-              limit: 120,
-              minSitelinks: 0,
-              includeP131: true
-            }, signal, 15000);
-
-            const seen = new Set(places.map(p => p.qid));
-            for (const m of heavy) if (!seen.has(m.qid)) places.push(m), seen.add(m.qid);
-          }
-
-          if (token !== activeLoadToken) return;
-
-          places = places.slice(0, Math.max(min, 5));
-
-          if (!firstShown) hideLoading("Klaar! Klik op een plek voor details.");
-          else setStatus("ok", "Meer plekken geladen.");
-          panelSubtitle.textContent = "Kies een plek of zoom rond op de pins.";
-
-          renderPlaces(places);
-          plotPins(places);
-
-          const existing = cache.byIso.get(iso3) || {};
-          cache.byIso.set(iso3, { ...existing, places, ts: Date.now() });
-          saveLocalCache();
-        } catch (e) {
-          if (e && (e.name === "AbortError" || String(e).includes("aborted"))) return;
-          setStatus("warn", "Kon niet alle plekken laden (Wikidata kan soms traag zijn). Probeer opnieuw of kies een ander land.");
-          console.error(e);
-        }
-      };
-
-      if ("requestIdleCallback" in window) requestIdleCallback(runFull, { timeout: 1500 });
-      else setTimeout(runFull, 250);
-    }
 
     // ====== UI render ======
     function clearActivePlaceUI(){
@@ -1885,3 +1831,4 @@
   </script>
 </body>
 </html>
+
