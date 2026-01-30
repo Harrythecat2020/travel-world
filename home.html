@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>WereldExplorer — Home</title>
+<style>
+:root{
+--bg: #06080f;
+--panel: rgba(13, 17, 27, 0.92);
+--text: #e8ecff;
+--muted: rgba(232,236,255,0.68);
+--accent: #7aa8ff;
+--radius: 14px;
+--sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:40px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius)}
+header{display:flex;align-items:center;gap:14px}
+.dot{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff, var(--accent));box-shadow:0 0 18px rgba(122,168,255,.35)}
+h1{margin:0;font-size:20px}
+p.lead{color:var(--muted);margin-top:12px}
+.ctas{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
+a.btn{display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;font-weight:700}
+a.primary{background:linear-gradient(90deg,var(--accent),#6fb0ff);color:#061022;border:none}
+a.ghost{background:transparent}
+footer{margin-top:20px;color:var(--muted);font-size:13px}
+@media (max-width:640px){.wrap{margin:18px;padding:18px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header>
+<div class="dot" aria-hidden></div>
+<div>
+<div style="font-weight:800">WereldExplorer</div>
+<div style="font-size:12px;color:var(--muted)">Ontdek plekken per land</div>
+</div>
+</header>
+
+
+<h1>Welkom bij WereldExplorer</h1>
+<p class="lead">Klik op "Start verkennen" om meteen de interactieve globe te openen, of log in als je favoriete locaties wilt bewaren.</p>
+
+
+<div class="ctas">
+<a class="btn primary" href="index.html">Start verkennen</a>
+<a class="btn" href="login.html">Inloggen</a>
+<a class="btn ghost" href="#about" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Meer info</a>
+</div>
+
+
+<section id="about" style="margin-top:26px">
+<div style="font-weight:700">Wat is dit?</div>
+<p class="muted" style="color:var(--muted);margin-top:8px">WereldExplorer is een lichte web-app om locaties per land te verkennen. De globe haalt kaartdata van Natural Earth en plekken van Wikidata.</p>
+</section>
+
+
+<footer>
+<div>Gemaakt door Cas &amp; Orlando — Data: Natural Earth + Wikidata</div>
+</footer>
+</main>
+</body>
+</html>

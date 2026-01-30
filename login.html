@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Inloggen — WereldExplorer</title>
+<style>
+:root{--bg:#06080f;--panel:rgba(13,17,27,0.92);--text:#e8ecff;--muted:rgba(232,236,255,0.68);--accent:#7aa8ff;--radius:12px;--sans:ui-sans-serif,system-ui,-apple-system}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);display:grid;place-items:center}
+.card{width:min(520px,92vw);background:var(--panel);padding:22px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.06)}
+h2{margin:0 0 8px 0}
+label{display:block;margin-top:12px;font-size:13px;color:var(--muted)}
+input[type="email"],input[type="password"]{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text);margin-top:6px}
+.row{display:flex;gap:10px;align-items:center;margin-top:16px}
+button{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text);cursor:pointer}
+button.primary{background:linear-gradient(90deg,var(--accent),#6fb0ff);border:none}
+.muted{color:var(--muted);font-size:13px;margin-top:12px}
+.err{color:#ff6b7a;margin-top:10px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="card" role="main">
+<h2>Inloggen</h2>
+<form id="loginForm">
+<label for="email">E‑mail</label>
+<input id="email" type="email" autocomplete="email" required />
+
+
+<label for="password">Wachtwoord</label>
+<input id="password" type="password" autocomplete="current-password" required minlength="4" />
+
+
+<div class="row">
+<button type="submit" class="primary">Inloggen</button>
+<button type="button" id="demoBtn">Demo account</button>
+<a href="home.html" style="margin-left:auto;align-self:center;color:var(--muted);text-decoration:underline">Terug</a>
+</div>
+
+
+<div id="err" class="err" role="status" aria-live="polite" style="display:none"></div>
+<div class="muted">Dit is een demo-login (geen echte gebruikersauthenticatie).</div>
+</form>
+</div>
+
+
+<script>
+const form = document.getElementById('loginForm');
+const err = document.getElementById('err');
+const emailEl = document.getElementById('email');
+const pwEl = document.getElementById('password');
+const demoBtn = document.getElementById('demoBtn');
+
+
+function showError(msg){ err.style.display='block'; err.textContent = msg; }
+function clearError(){ err.style.display='none'; err.textContent = ''; }
+
+
+form.addEventListener('submit', (e)=>{
+e.preventDefault();
+clearError();
+const email = String(emailEl.value || '').trim();
+const pw = String(pwEl.value || '');
+if (!email) return showError('Voer een geldig e‑mail adres in.');
+if (pw.length < 4) return showError('Wachtwoord te kort.');
+
+
+// MOCK: sla een token op en redirect naar de app
+try {
+localStorage.setItem('we_user_email', email);
+localStorage.setItem('we_token', 'demo-token');
+// kleine vertraging voor UX
+setTimeout(()=>{ location.href = 'index.html'; }, 300);
+} catch (err){
+showError('Kon niet inloggen — localStorage geblokkeerd.');
+console.error(err);
+}
+});
+
+
+demoBtn.addEventListener('click', ()=>{
+emailEl.value = 'demo@voorbeeld.test';
+pwEl.value = 'demo1234';
+form.requestSubmit();
+});
+</script>
+</body>
+</html>
