@@ -70,7 +70,7 @@ try {
 localStorage.setItem('we_user_email', email);
 localStorage.setItem('we_token', 'demo-token');
 // kleine vertraging voor UX
-setTimeout(()=>{ location.href = 'index.html'; }, 300);
+setTimeout(()=>{ location.href = 'app.html'; }, 300);
 } catch (err){
 showError('Kon niet inloggen — localStorage geblokkeerd.');
 console.error(err);
@@ -85,4 +85,5 @@ form.requestSubmit();
 });
 </script>
 </body>
+
 </html>
