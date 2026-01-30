@@ -310,6 +310,9 @@
         <button id="randomBtn" title="Ga naar een willekeurig land (R)">Random</button>
         <button id="resetBtn" title="Terug naar wereldbeeld (0)">Reset</button>
       </div>
+
+      <div id="authArea" style="margin-left:12px;"></div>
+
     </div>
 
     <aside id="panel">
@@ -1829,6 +1832,45 @@
       setStatus("bad", "Fout bij init. Check console + netwerk (CORS).");
     });
   </script>
+  <script>
+(function(){
+  function escapeHtml(s){
+    return String(s||'').replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function updateAuthUI(){
+    const authArea = document.getElementById('authArea');
+    if (!authArea) return;
+    const email = localStorage.getItem('we_user_email');
+    const token = localStorage.getItem('we_token');
+    if (token && email){
+      authArea.innerHTML = '<div class="pill" id="userPill"><span style="font-weight:700">' + escapeHtml(email) + '</span> <button id="logoutBtn" class="btn" style="margin-left:10px">Uitloggen</button></div>';
+      const btn = document.getElementById('logoutBtn');
+      if (btn) btn.addEventListener('click', function(){
+        localStorage.removeItem('we_user_email');
+        localStorage.removeItem('we_token');
+        // kleine visuele update
+        updateAuthUI();
+      });
+    } else {
+      authArea.innerHTML = '<div class="pill"><a href="login.html" class="btn">Inloggen</a></div>';
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateAuthUI);
+  } else {
+    updateAuthUI();
+  }
+
+  // optioneel: globale helper in console
+  window.we_updateAuthUI = updateAuthUI;
+})();
+</script>
+
 </body>
 </html>
+
 
