@@ -7,60 +7,267 @@
 <style>
 :root{
 --bg: #06080f;
---panel: rgba(13, 17, 27, 0.92);
+--panel: rgba(13, 17, 27, 0.88);
 --text: #e8ecff;
---muted: rgba(232,236,255,0.68);
+--muted: rgba(232,236,255,0.65);
 --accent: #7aa8ff;
---radius: 14px;
---sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+--radius: 18px;
+--blur: blur(14px);
+--sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
 }
-html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
-.wrap{max-width:980px;margin:40px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius)}
-header{display:flex;align-items:center;gap:14px}
-.dot{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff, var(--accent));box-shadow:0 0 18px rgba(122,168,255,.35)}
-h1{margin:0;font-size:20px}
-p.lead{color:var(--muted);margin-top:12px}
-.ctas{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
-a.btn{display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:var(--text);text-decoration:none;font-weight:700}
-a.primary{background:linear-gradient(90deg,var(--accent),#6fb0ff);color:#061022;border:none}
-a.ghost{background:transparent}
-footer{margin-top:20px;color:var(--muted);font-size:13px}
-@media (max-width:640px){.wrap{margin:18px;padding:18px}}
+
+*{box-sizing:border-box}
+
+html,body{
+height:100%;
+margin:0;
+background:radial-gradient(circle at top,#0b1430,#05070c);
+color:var(--text);
+font-family:var(--sans);
+}
+
+.wrap{
+max-width:1100px;
+margin:40px auto;
+padding:26px;
+}
+
+header{
+display:flex;
+align-items:center;
+gap:14px;
+margin-bottom:20px;
+}
+
+.dot{
+width:12px;
+height:12px;
+border-radius:50%;
+background:radial-gradient(circle,#fff,var(--accent));
+box-shadow:0 0 20px rgba(122,168,255,.5);
+}
+
+.layout{
+display:grid;
+grid-template-columns:1.3fr 1fr;
+grid-template-rows:auto auto;
+gap:20px;
+}
+
+.card{
+background:var(--panel);
+backdrop-filter:var(--blur);
+border-radius:var(--radius);
+padding:20px;
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:0 10px 30px rgba(0,0,0,.4);
+transition:.3s ease;
+animation:fadeUp .6s ease both;
+}
+
+.card:hover{
+transform:translateY(-4px);
+box-shadow:0 18px 40px rgba(0,0,0,.5);
+}
+
+.left-panel{
+grid-row:span 2;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+h1{
+margin:0;
+font-size:28px;
+}
+
+.lead{
+color:var(--muted);
+margin:10px 0 16px;
+}
+
+.ctas{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:11px 16px;
+border-radius:12px;
+font-weight:700;
+border:1px solid rgba(255,255,255,.1);
+background:rgba(255,255,255,.05);
+color:var(--text);
+text-decoration:none;
+transition:.25s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+}
+
+.primary{
+background:linear-gradient(90deg,var(--accent),#9bbcff);
+color:#061022;
+border:none;
+}
+
+.globe{
+margin-top:20px;
+height:240px;
+width:240px;
+border-radius:50%;
+background:
+radial-gradient(circle at 30% 30%, #9bbcff, #0c1c44 60%, #040814);
+align-self:center;
+box-shadow:
+inset 0 0 40px rgba(0,0,0,.6),
+0 0 60px rgba(122,168,255,.4);
+animation:spin 20s linear infinite;
+}
+
+.top-pill{
+border-radius:999px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+}
+
+.search{
+flex:1;
+background:rgba(255,255,255,.06);
+border:none;
+outline:none;
+color:white;
+padding:10px 14px;
+border-radius:999px;
+}
+
+.badge{
+background:rgba(122,168,255,.15);
+color:var(--accent);
+padding:6px 14px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+white-space:nowrap;
+}
+
+.bottom-wide{
+font-size:14px;
+color:var(--muted);
+}
+
+footer{
+margin-top:18px;
+font-size:13px;
+color:var(--muted);
+text-align:center;
+}
+
+/* Animations */
+
+@keyframes spin{
+from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* Mobile */
+
+@media(max-width:800px){
+.layout{
+grid-template-columns:1fr;
+}
+.globe{
+width:180px;
+height:180px;
+}
+}
 </style>
+
 </head>
 <body>
 <main class="wrap">
+
 <header>
-<div class="dot" aria-hidden></div>
+<div class="dot"></div>
 <div>
 <div style="font-weight:800">WereldExplorer</div>
 <div style="font-size:12px;color:var(--muted)">Ontdek plekken per land</div>
 </div>
 </header>
 
+<div class="layout">
 
-<h1>Welkom bij WereldExplorer</h1>
-<p class="lead">Klik op "Start verkennen" om meteen de interactieve globe te openen, of log in als je favoriete locaties wilt bewaren.</p>
+<!-- LEFT BIG PANEL -->
+<div class="card left-panel">
 
+<div>
+<h1>Explore The Planet</h1>
+
+<p class="lead">
+Browse countries, cities and hidden places using an interactive 3D-style globe.
+</p>
 
 <div class="ctas">
-<a class="btn primary" href="app.html">Start verkennen</a>
-<a class="btn" href="login.html">Inloggen</a>
-<a class="btn ghost" href="#about" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Meer info</a>
+<a class="btn primary" href="app.html">Start Verkennen</a>
+<a class="btn" href="login.html">Login</a>
+</div>
 </div>
 
+<div class="globe"></div>
 
-<section id="about" style="margin-top:26px">
-<div style="font-weight:700">Wat is dit?</div>
-<p class="muted" style="color:var(--muted);margin-top:8px">WereldExplorer is een lichte web-app om locaties per land te verkennen. De globe haalt kaartdata van Natural Earth en plekken van Wikidata.</p>
-</section>
+</div>
 
+<!-- TOP RIGHT SEARCH -->
+<div class="card top-pill">
+
+<input 
+class="search" 
+type="text" 
+placeholder="Search country or city..." 
+>
+
+<span class="badge">LIVE MAP</span>
+
+</div>
+
+<!-- BOTTOM RIGHT INFO -->
+<div class="card bottom-wide">
+
+<strong>About WereldExplorer</strong>
+
+<p style="margin-top:8px">
+Explore the world using data from Natural Earth and Wikidata.
+Save favorite locations and navigate visually with a smooth interactive globe.
+</p>
+
+</div>
+
+</div>
 
 <footer>
-<div>Gemaakt door Cas &amp; Orlando — Data: Natural Earth + Wikidata</div>
+Gemaakt door Cas & Orlando — Data: Natural Earth + Wikidata
 </footer>
+
 </main>
+
 </body>
 </html>
+
 
 
